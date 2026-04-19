@@ -77,7 +77,7 @@ The system evolved because real usage demanded it.
 
 ---
 
-## Architecture Overview
+## Architecture Overview   - https://github.com/lkvinodh/context-pm/blob/main/ARCHITECTURE.md
 
 
 ### High-Level System Architecture
@@ -257,9 +257,9 @@ production-ai-agent/
 3. Implement caching layer
 4. Add hybrid routing (task-based architecture selection)
 
-**Full implementation guide with code examples:** See [IMPLEMENTATION.md](docs/IMPLEMENTATION.md)
+**Full implementation guide with code examples:** See [[IMPLEMENTATION.md](docs/IMPLEMENTATION.md)](https://github.com/lkvinodh/context-pm/blob/main/IMPLEMENTATION.md)
 
-## Performance Benchmarks
+## Performance Benchmarks  - 
 
 ### Test Methodology
 
@@ -307,7 +307,7 @@ production-ai-agent/
 
 **Key Finding:** Multi-agent is faster for **creative/writing tasks**, slower for **analytical/research tasks**.
 
----
+https://github.com/lkvinodh/context-pm/blob/main/BENCHMARKS.md---
 
 ### Root Cause Analysis
 
@@ -479,9 +479,9 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 **Documentation:**
 - [Full Implementation Guide](docs/IMPLEMENTATION.md)
-- [Architecture Deep Dive](docs/ARCHITECTURE.md)
-- [Benchmarking Methodology](docs/BENCHMARKS.md)
-- [Production Deployment Guide](docs/DEPLOYMENT.md)
+- [Architecture Deep Dive][(docs/ARCHITECTURE.md)](https://github.com/lkvinodh/context-pm/blob/main/ARCHITECTURE.md)
+- [Benchmarking Methodology]([docs/BENCHMARKS.md)](https://github.com/lkvinodh/context-pm/blob/main/BENCHMARKS.md)
+- [Production Deployment Guide][(docs/DEPLOYMENT.md)](https://github.com/lkvinodh/context-pm/blob/main/DEPLOYMENT.md)
 
 **Related Projects:**
 - [Anthropic Claude API Documentation](https://docs.anthropic.com/)
