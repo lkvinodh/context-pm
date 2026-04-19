@@ -1,109 +1,84 @@
-# Production-Grade AI Agent System: A Practical Guide for Enterprise Knowledge Management
+# context-pm  
+**A local-first system for managing evolving product context at scale**
 
-> **Built by a Product Manager at SAP working on AI-driven payroll automation. This repository provides a complete blueprint for building enterprise AI agents—from architecture to implementation to performance optimization.**
+Built from real product work where documents, architecture decisions, test plans, and compliance requirements change daily—and Product Managers are expected to stay perfectly aligned across engineering, UX, leadership, and external stakeholders.
+
+This repository documents **how to build a production-grade local knowledge system** using Retrieval Augmented Generation (RAG), context compaction, and agent-based workflows—designed specifically for PM realities, not demos.
+
+> This is not a tutorial project.  
+> It is a system that evolved through real usage, failed assumptions, and benchmarks.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![Claude API](https://img.shields.io/badge/Anthropic-Claude%20API-orange.svg)](https://www.anthropic.com/api)
+---
+
+## Table of Contents
+1. #the-problem
+2. What I Built
+3. #architecture-overview
+4. Implementation Guide
+5. #performance-benchmarks
+6. Lessons Learned
+7. #when-to-use-which-architecture
+8. #getting-started
+9. #contributing
 
 ---
 
-## 🎯 Purpose
+## The Problem
 
-This repository exists to help **product managers, engineers, and AI practitioners** build production-grade AI agent systems for enterprise environments. It's based on real experience building and benchmarking two architectures in a corporate setting, with all the messy details included.
+Product Managers don’t struggle with lack of information.  
+We struggle with **too much of it—spread everywhere**.
 
-**What makes this different from tutorials:**
-- ✅ **Real enterprise challenges**: Multi-system authentication, compliance requirements, state management
-- ✅ **Production patterns**: Error handling, monitoring, cost tracking, graceful degradation
-- ✅ **Honest benchmarks**: Side-by-side comparison showing what actually worked (and what didn't)
-- ✅ **Practical trade-offs**: When to use which architecture, backed by data
-- ✅ **Generic & adaptable**: No proprietary details, applicable to any enterprise knowledge management use case
+In a typical multi‑project setup:
+- Architecture docs in GitHub change multiple times a day
+- Test plans evolve continuously as engineering iterates
+- Compliance requirements arrive late and urgently
+- Jira tickets, Confluence pages, and wikis diverge
+- The same information must be rewritten for engineers, leadership, UX, and external partners
 
----
+Answering a single question often means:
+**search → read → reconcile → rewrite → reformat → resend**
 
-## 📖 Table of Contents
+This work is invisible, repetitive, and cognitively expensive.  
+It is not product thinking. It is **context tax**.
 
-1. [The Problem](#the-problem)
-2. [What I Built](#what-i-built)
-3. [Architecture Overview](#architecture-overview)
-4. [Implementation Guide](#implementation-guide)
-5. [Performance Benchmarks](#performance-benchmarks)
-6. [Lessons Learned](#lessons-learned)
-7. [When to Use Which Architecture](#when-to-use-which-architecture)
-8. [Getting Started](#getting-started)
-9. [For SAP Colleagues](#for-sap-colleagues)
-10. [Contributing](#contributing)
+The core problem is not access to documents.  
+It is **maintaining an evolving, reliable understanding of the system** while everything changes underneath.
 
 ---
 
-## 🚨 The Problem
+## What I Built
 
-As a Product Manager working on AI-driven payroll automation at SAP, I faced a common challenge: **information overload across heterogeneous enterprise systems.**
+A **local-first knowledge and context system** designed around how PMs actually work.
 
-**The typical scenario:**
-- Engineering lead asks: "How does the alert orchestrator integrate with the readiness agent?"
-- My process:
-  1. Search GitHub repos (authenticate to 2 internal instances)
-  2. Check Confluence wiki (manage session tokens)
-  3. Review PowerPoint presentations (28 files across multiple projects)
-  4. Cross-reference Jira tickets
-  5. Synthesize answer and format for audience
-  6. **Total time: 30-45 minutes**
+At a high level, the system:
+- Continuously reads multiple knowledge sources (GitHub, Confluence, Jira, wikis, documents)
+- Converts raw content into structured markdown
+- Tracks what changed instead of reprocessing everything
+- Retrieves only relevant context per query (RAG)
+- Adapts responses to different stakeholder audiences
+- Optimizes for cost and latency through context compaction
+- Supports both single-agent and multi-agent workflows
 
-**The pain points:**
-- ⏱️ 30-45 minutes per query
-- 🔐 Authentication hell (OAuth2, Bearer tokens, multi-instance domains)
-- 📚 Manual context switching across 10+ systems
-- 🧠 Context loss between meetings
-- 📊 Inconsistent formatting for different stakeholders
+Initially, this was:
+- simple scripts  
+then:
+- Python functions generated via AI  
+then:
+- a local CLI chatbot  
+then:
+- a browser-based UI  
+then:
+- multi-agent orchestration experiments  
 
-**The realization:** If I'm building AI agents professionally, I should build one for myself that actually works in production.
-
----
-
-## 🛠️ What I Built
-
-A production-grade knowledge management system with two architectures (single-agent and multi-agent), rigorously benchmarked to understand trade-offs.
-
-### System Capabilities
-
-**Core Features:**
-- Multi-source integration (GitHub Enterprise, Confluence, Jira, Office documents)
-- Incremental sync with hash-based change detection (90% faster updates)
-- Hybrid retrieval (semantic + keyword search, 85% cost savings)
-- Template-based workflows (PM-specific use cases)
-- Compliance-first design (local deployment, data sovereignty)
-
-**Production Patterns:**
-- Enterprise authentication (OAuth2, Bearer tokens, refresh logic)
-- State management with atomic writes
-- Error handling and graceful degradation
-- Cost tracking and optimization
-- Monitoring and observability
-
-**Results:**
-- ⚡ 30-45 min → 5 sec response time
-- 💰 67% cost reduction (multi-agent mode)
-- 📊 150+ pages searchable across 4 systems
-- 🧠 Perfect recall with audience-aware formatting
-
-### The Two Architectures
-
-**1. Single-Agent (Monolithic)**
-- One generalist agent handles all query types
-- Direct retrieval → LLM call → response
-- Faster for analytical queries
-- Simpler to maintain
-
-**2. Multi-Agent (Orchestrated)**
-- Specialized agents (Research, Content Generator, Technical Advisor, Business Analyst)
-- Orchestrator routes to appropriate specialist
-- Faster for creative tasks (emails, presentations)
-- 67% cheaper but 37% slower overall
+The system evolved because real usage demanded it.
 
 ---
 
-## 🏗️ Architecture Overview
+## Architecture Overview
+
 
 ### High-Level System Architecture
 
@@ -158,40 +133,44 @@ A production-grade knowledge management system with two architectures (single-ag
          └─────────────────────────────────────────────────┘
 ```
 
-### Key Components
+At its core, the system has four layers:
 
-**1. Data Integration Layer**
-- Unified adapter pattern for heterogeneous enterprise APIs
-- Per-API authentication (OAuth2, Bearer tokens, refresh logic)
-- Rate limiting with exponential backoff
-- Format-specific parsers (markdown, Office docs, notebooks)
-- Graceful degradation on failures
+### 1. Ingestion & Normalization
+- Pulls content from:
+  - Git repositories
+  - Confluence / wiki systems
+  - Jira-like issue trackers
+  - Local Word, PowerPoint, and Excel files
+- Converts all content into **clean markdown**
+- Removes formatting noise while preserving meaning
 
-**2. Incremental Sync Engine**
-- SHA-256 hash-based change detection
-- Only process documents that changed
-- Atomic writes to prevent state corruption
-- Per-file error tracking and recovery
-- **Result:** 90% faster updates, 80% cost savings on re-processing
+### 2. Change Detection & State
+- Each document is hashed (content-level)
+- Only modified content is reprocessed
+- Prevents unnecessary re-embedding
+- Preserves historical decisions explicitly
 
-**3. Hybrid Retrieval System**
-- Semantic search (embedding-based similarity)
-- Keyword search (BM25 with technical term boosting)
-- Hybrid re-ranking (configurable weighting)
-- Recency boost (exponential decay)
-- Dynamic context assembly (token budget management)
-- **Result:** 85% cost savings while maintaining 95%+ answer quality
+### 3. Retrieval (RAG Layer)
+Yes—this is Retrieval Augmented Generation, but opinionated.
 
-**4. Agent Orchestration**
-- Lightweight orchestrator (Claude Haiku) for fast routing
-- Specialized system prompts per agent type
-- Model selection based on task complexity
-- Fallback to single-agent on routing failures
-- Template-based workflows for common use cases
+- Semantic retrieval + lightweight keyword filtering
+- Decision-focused chunking (not arbitrary token splits)
+- Context compaction before model calls
+- Audience-aware rendering
+
+RAG here is not “search and paste”.  
+It is **retrieve → reason → reframe**.
+
+### 4. Reasoning Layer
+Two supported modes:
+- **Single-agent (monolithic)** for speed and analysis
+- **Multi-agent (orchestrated)** for specialization and writing tasks
+
+A feature flag allows switching and benchmarking both.
 
 ---
 
-## 📚 Implementation Guide
+## Implementation Guide
 
 ### Prerequisites
 
@@ -280,9 +259,7 @@ production-ai-agent/
 
 **Full implementation guide with code examples:** See [IMPLEMENTATION.md](docs/IMPLEMENTATION.md)
 
----
-
-## 📊 Performance Benchmarks
+## Performance Benchmarks
 
 ### Test Methodology
 
@@ -377,42 +354,27 @@ production-ai-agent/
 - Appropriate depth (presentations concise, analysis thorough)
 - Consistent formatting (predictable output style)
 
----
-
-## 💡 Lessons Learned
-
-### 1. Measure Before You Ship (Don't Trust Your Gut)
-
-**What I did wrong:** Built the entire multi-agent system based on intuition and early manual tests.
-
-**What I assumed:**
-- ❌ Multi-agent would be faster (specialized processing should be quicker)
-- ❌ Token usage would decrease (focused prompts should need less context)
-- ❌ Early tests showed improvements (warm-start bias)
-
-**What was actually true:**
-- ✅ Multi-agent was 37% slower (orchestration + cold start overhead)
-- ✅ Token usage increased 3x (multiple API calls with context duplication)
-- ✅ Cost savings came from cheaper models, not efficiency
-
-**The lesson:** A 10-hour benchmark revealed assumptions I would have shipped as fact. Measure early with real queries in realistic conditions.
 
 ---
 
-### 2. Early Results Lie (Especially Warm-Start Tests)
+## Lessons Learned
 
-**Why my early testing was misleading:**
-- I kept the system running (no cold starts)
-- I tested one query at a time (no cumulative overhead visibility)
-- I focused on output quality (not latency or tokens)
+### 1. Raw Documents Kill RAG Quality
+Formatting noise destroys relevance. Markdown normalization mattered more than embeddings.
 
-**The reality:** Real users restart sessions, switch contexts frequently, and care about every second of latency. Development environment testing doesn't reflect production usage patterns.
+### 2. Incremental RAG Beats “Just Reindex”
+Change detection reduced cost and latency more than model changes.
 
----
+### 3. Smaller Context > Bigger Models
+Clean context + smaller models repeatedly outperformed messy context + large models.
 
-### 3. Cost Per Token ≠ Total Cost
+### 4. Elegant Architecture Can Benchmark Poorly
+Some designs felt right and performed badly. Measurement changed everything.
 
-**What I calculated:**
+### 5. PM Knowledge Is Structural
+Decisions, trade-offs, and evolution matter more than raw text.
+
+### 6. **What I calculated:**
 - Haiku costs 10x less per token than Opus → TRUE
 - Sonnet costs 5x less per token than Opus → TRUE
 
@@ -424,186 +386,74 @@ production-ai-agent/
 
 ---
 
-### 4. Production Code Is 10x Tutorial Code
-
-Most tutorials: 100 lines, works once, no error handling.
-
-Production: 3,000 lines handling:
-- Expired tokens and refresh logic
-- Rate limits with exponential backoff
-- Malformed documents and parsing errors
-- API changes and version compatibility
-- State corruption and atomic writes
-- Graceful degradation on failures
-
-**The lesson:** The first 80% is easy. The last 20% (production hardening) is where systems prove their maturity.
-
----
-
-### 5. Domain Knowledge Is the Moat
-
-Generic tools don't understand:
-- "PCC" or "PRA" in my domain
-- Relationships between system components
-- How to format for specific stakeholders (engineering vs leadership)
-
-**The lesson:** Domain-specific grounding is the competitive advantage. Build systems that understand your specific context, not generic chatbots.
-
----
-
-### 6. Authentication Is Harder Than the AI
-
-OAuth2 flows, token refresh, rate limiting, and error handling across 4 different enterprise APIs was more complex than LLM integration.
-
-**Enterprise integration breakdown:**
-- 30% understanding API documentation
-- 40% handling authentication edge cases
-- 20% dealing with rate limits and timeouts
-- 10% actual data fetching
-
-**The lesson:** Budget 50% of development time for auth and integration, not just AI logic.
-
----
-
-## 🎯 When to Use Which Architecture
+## When to Use Which Architecture
 
 ### Use Single-Agent When:
-- ✅ Low latency is critical (< 5 second responses)
-- ✅ Queries are analytical or research-focused
-- ✅ System simplicity is important
-- ✅ You're optimizing for speed over cost
-- ✅ Token efficiency matters (fewer total tokens)
+- Low latency matters
+- Queries are analytical or investigative
+- Context scope is narrow
+- You want architectural simplicity
 
 ### Use Multi-Agent When:
-- ✅ Tasks clearly fall into distinct categories
-- ✅ Specialization improves quality (writing, presentations)
-- ✅ High query volume makes cost optimization important
-- ✅ You can tolerate 20-40% slower responses for better outputs
-- ✅ You can implement agent pooling (eliminate cold start)
-- ✅ Creative/writing tasks dominate your workload
+- Outputs are creative or communicative
+- Stakeholder-specific formatting matters
+- Cost per query is critical
+- Latency trade-offs are acceptable
 
-### Use Hybrid When:
-- ✅ You have mixed workload (analytical + creative queries)
-- ✅ You want best-of-both-worlds performance
-- ✅ You can implement task-based routing
-- ✅ You're willing to maintain two systems
-
-**My recommendation:** Start with single-agent. Add multi-agent only for specific high-value use cases where specialization demonstrably helps (backed by benchmarks).
+### Best Practice
+Start simple. Add agents only where specialization clearly pays off.
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
-### Installation
+### Prerequisites
+- Python 3.9+
+- Local LLM API access (cloud or local, configurable)
+- Access credentials for your content sources
 
-```bash
-# Clone repository
-git clone https://github.com/yourusername/production-ai-agent.git
-cd production-ai-agent
+### Basic Flow
+1. Configure data sources
+2. Run initial ingestion
+3. Validate markdown outputs
+4. Enable retrieval
+5. Query via CLI or browser UI
+6. Benchmark before scaling
 
-# Install dependencies
-pip install -r requirements.txt
+> This repository focuses on **patterns and architecture**.  
+> Source adapters and credentials are intentionally abstracted.
 
-# Configure
-cp .env.example .env
-# Edit .env with your credentials
-```
+--- Details 
 
-### Configuration
+## Contributing
 
-Edit `.env`:
-```
-ANTHROPIC_API_KEY=your_api_key
-GITHUB_URL=https://github.yourcompany.com
-GITHUB_TOKEN=your_oauth_token
-GITHUB_REPOS=org/repo1,org/repo2
-CONFLUENCE_URL=https://yourcompany.atlassian.net
-CONFLUENCE_TOKEN=your_bearer_token
-OFFICE_DOCS_PATH=/path/to/documents
-```
+Contributions are welcome—especially around:
+- additional document extractors
+- improved context compaction strategies
+- benchmarking methodologies
+- visualization and UX improvements
 
-### Basic Usage
-
-```bash
-# Sync data sources
-python src/main.py sync
-
-# Query (single-agent mode)
-python src/main.py query "Find all documents about X"
-
-# Query (multi-agent mode)
-python src/main.py query "Write an email about Y" --mode multi
-
-# Run benchmark
-python benchmark/benchmark.py
-
-# Start web interface
-python src/api/app.py
-```
+Please:
+- keep changes generic
+- avoid proprietary integrations
+- document trade-offs honestly
 
 ---
 
-## 👥 For SAP Colleagues
+### Final Thought
 
-This repository is designed to be **immediately useful for SAP teams** working on AI initiatives, particularly in:
-- Knowledge management and documentation systems
-- Internal chatbots and assistants
-- Payroll automation and compliance agents
-- Technical documentation search
-- Cross-system integration
+Product work is about managing **evolving truth**.
 
-**How to adapt this for your use case:**
+Treating context as a first-class system—rather than a side effect of documentation—changed how this work scaled.
 
-1. **Replace data sources:**
-   - Use your GitHub/Confluence/Jira instances
-   - Add SAP-specific systems (SuccessFactors, S/4HANA, etc.)
-   - Implement adapters for internal databases
+If this helps you reclaim time, clarity, or sanity:  
+that’s success.
 
-2. **Customize templates:**
-   - Adapt workflows to your team's needs
-   - Add SAP-specific terminology and acronyms
-   - Configure for your stakeholder types
-
-3. **Compliance & security:**
-   - Local-first deployment (no data leaves your environment)
-   - Audit logging for compliance requirements
-   - Role-based access control (extend as needed)
-
-4. **Benchmarking:**
-   - Use your actual queries for testing
-   - Measure against your team's latency expectations
-   - Track costs against your budget constraints
-
-**Key considerations for enterprise deployment:**
-- ✅ All code is designed for local deployment (data sovereignty)
-- ✅ No proprietary SAP information in this repository (generic patterns only)
-- ✅ Authentication patterns work with SAP identity providers
-- ✅ Cost tracking built-in (important for chargeback models)
-
-**Questions?** Open an issue or reach out directly on Microsoft Teams.
+s.
 
 ---
 
-## 🤝 Contributing
 
-Contributions welcome! This is intended as a living reference for enterprise AI agents.
-
-**Areas for contribution:**
-- Additional data source adapters (Slack, Notion, SAP systems)
-- Alternative LLM providers (OpenAI, Cohere, local models)
-- Vector database integrations (Pinecone, Weaviate, ChromaDB)
-- Evaluation frameworks (LangSmith, Langfuse)
-- Performance optimizations
-- Documentation improvements
-
-**How to contribute:**
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
 
 ## 📄 License
 
@@ -617,11 +467,6 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 **LinkedIn:** [Connect with me](https://www.linkedin.com/in/lkvinodh/)
 
-**Portfolio:** This repository demonstrates:
-- Production AI engineering (beyond tutorials)
-- Enterprise integration patterns (auth, state management, cost optimization)
-- Data-driven decision making (rigorous benchmarking)
-- Technical product management (trade-off analysis, architecture decisions)
 
 **Read the full story:** 
 - [Building Production-Grade AI Agents (LinkedIn Article)](#)
@@ -665,17 +510,6 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ---
 
-## 📈 Project Stats
 
-- **Lines of Code:** ~3,000 (production Python)
-- **Data Sources:** 4 enterprise systems + Office documents
-- **Documents Indexed:** 150+ pages
-- **Query Types:** 5 specialized workflows
-- **Benchmark Queries:** 10 real-world scenarios
-- **Performance Improvement:** 30-45 min → 5 sec (90%+ time savings)
-- **Cost Optimization:** 85% reduction via hybrid retrieval
-- **Maintenance:** Active (optimizations ongoing)
-
----
 
 *Last Updated: April 2026*
