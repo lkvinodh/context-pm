@@ -469,9 +469,8 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 
 **Read the full story:** 
-- [Building Production-Grade AI Agents (LinkedIn Article)](#)
-- [From One Agent to Many (LinkedIn Article)](#)
-- [Performance Benchmarking & Lessons (LinkedIn Article)](#)
+
+[https://www.linkedin.com/pulse/ai-didnt-replace-pm-work-removed-cognitive-tax-vinodh-lk-ldpac](https://www.linkedin.com/pulse/ai-didnt-replace-pm-work-removed-cognitive-tax-vinodh-lk-ldpac)
 
 ---
 
